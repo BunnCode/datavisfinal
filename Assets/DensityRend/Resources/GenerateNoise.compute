@@ -1,0 +1,80 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture3D<float> Result;
+
+#define MOD2 float2(.16632,.17369)
+#define MOD3 float3(.16532,.17369,.15787)
+
+
+
+float rand(float3 co)
+{
+	return frac(sin(dot(co.xyz, float3(12.9898, 78.233, 45.5432))) * 43758.5453);
+}
+
+float hash(float p)
+{
+	float2 p2 = frac(p * MOD2);
+	p2 += dot(p2.yx, p2.xy + 19.19);
+	return frac(p2.x * p2.y);
+}
+
+float hash(float3 p)
+{
+	p = frac(p * MOD3);
+	p += dot(p.xyz, p.yzx + 19.19);
+	return frac(p.x * p.y * p.z);
+}
+
+float noise(in float2 x)
+{
+	float2 p = floor(x);
+	float2 f = frac(x);
+	f = f*f*(3.0 - 2.0*f);
+	float n = p.x + p.y*57.0;
+	float res = lerp(lerp(hash(n + 0.0), hash(n + 1.0), f.x),
+		lerp(hash(n + 57.0), hash(n + 58.0), f.x), f.y);
+	return res;
+}
+float noise(in float3 p)
+{
+	float3 i = floor(p);
+	float3 f = frac(p);
+	f *= f * (3.0 - 2.0*f);
+
+	return lerp(
+		lerp(lerp(hash(i + float3(0., 0., 0.)), hash(i + float3(1., 0., 0.)), f.x),
+			lerp(hash(i + float3(0., 1., 0.)), hash(i + float3(1., 1., 0.)), f.x),
+			f.y),
+		lerp(lerp(hash(i + float3(0., 0., 1.)), hash(i + float3(1., 0., 1.)), f.x),
+			lerp(hash(i + float3(0., 1., 1.)), hash(i + float3(1., 1., 1.)), f.x),
+			f.y),
+		f.z);
+}
+
+float FBM(float3 p)
+{
+	p *= .25;
+	float f;
+
+	f = 0.5000 * noise(p); p = p * 3.02;// p.y -= _Time.y*.2;
+	f += 0.2500 * noise(p); p = p * 3.03; //p.y += _Time.y*.06;
+	f += 0.1250 * noise(p); p = p * 3.01;
+	f += 0.0625  * noise(p); p = p * 3.03;
+	f += 0.03125  * noise(p); p = p * 3.02;
+	f += 0.015625 * noise(p);
+	return f;
+}
+
+
+[numthreads(8, 8, 8)]
+void CSMain(uint3 id : SV_DispatchThreadID)
+{
+	// TODO: insert actual code here!
+	float noise = FBM(float3(id.x, id.y, id.z) / 5.0);
+	//Result[id] = float4(noise, noise, noise, 1);
+	Result[id] = noise;
+}

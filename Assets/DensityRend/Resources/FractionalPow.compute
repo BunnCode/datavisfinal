@@ -1,0 +1,13 @@
+﻿// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWTexture2D<float> Result;
+float2 _Size;
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID)
+{
+	//
+	Result[id.xy] = float(pow(_Size.y / (float)id.y, _Size.x / (float)id.x)) / (float)100.0;
+}
