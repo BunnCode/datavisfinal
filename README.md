@@ -1,6 +1,8 @@
 # README #
 
 # Media from presentation #
+![image](https://user-images.githubusercontent.com/17638042/158201485-f4abe6f2-d9e5-4af7-a7b7-4ae660155ad9.png)
+
 https://www.youtube.com/watch?v=rANeiJdTxy0
 
 https://www.youtube.com/watch?v=cQdGWc5PIlc
