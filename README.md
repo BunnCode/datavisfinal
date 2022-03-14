@@ -1,5 +1,9 @@
 # README #
 
+# Media from presentation #
+https://www.youtube.com/watch?v=rANeiJdTxy0
+https://www.youtube.com/watch?v=cQdGWc5PIlc
+
 # Prepping data #
 Data prep is done via the VtkConverter sub-project. It is a VTK project written in C++, and is in the directory VtkConverter/. It should build via cmake with no problems.
 
