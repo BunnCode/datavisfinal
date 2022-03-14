@@ -2,6 +2,7 @@
 
 # Media from presentation #
 https://www.youtube.com/watch?v=rANeiJdTxy0
+
 https://www.youtube.com/watch?v=cQdGWc5PIlc
 
 # Prepping data #
@@ -24,6 +25,7 @@ The GPU logic is contained within the Assets/DensityRend/Resources/DensityRender
 
 First, rays are immediately stepped up to the point of the rendering volume using an AABB intersection position test.
 ![image](https://user-images.githubusercontent.com/17638042/158109504-50e326fd-6d76-4018-b9fe-54c305529720.png)
+
 This test is also used for a second purpose; the "close" point is where the ray starts marching, and the "far" point is where it stops marching. In doing so, not a single step is wasted and images will appear very high resolution at even much lower numbers of steps. 
 Additionally, fragments are immediately clipped if they fail this intersection test. The shader was designed with no branching whatsoever, and the 3d texture is in a 1d float format which also saves time on sampling.
 
